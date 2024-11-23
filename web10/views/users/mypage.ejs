@@ -1,0 +1,59 @@
+<style>
+    .title{
+        width:200px;
+    }
+</style>
+<div class="row mt-5 justify-content-center">
+    <div class="col-md-8">
+        <h1><%=title%></h1>
+        <form name="frm">
+            <div class="input-group mb-3">
+                <div class="title input-group-text justify-content-center">이메일</div>
+                <input name="email" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="title input-group-text justify-content-center">성명</div>
+                <input name="name" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="title input-group-text justify-content-center">전화</div>
+                <input name="phone" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="title input-group-text justify-content-center">주소</div>
+                <input name="addr1" class="form-control">
+                <button type="button" class ="btn btn-primary search">주소검색</button>
+            </div>
+            <input name="addr2" class="form-control" placeholder="상세주소">
+            <div class="text-center mt-3">
+                <button type="submit" btn btn-primary">정보저장</button>
+                <button type="reset" btn btn-secondary">저장취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module">
+    import {app} from '/javascripts/config.js';
+    import {getDatabase, onValue, ref, remove, set} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+    $(frm).on("submit", function(e){
+        e.preventDefault();
+        if(confirm("정보를 저장하시겠습니까?")){
+            const email=$("input[name=email]").val();
+            const name=$("input[name=name]").val();
+            const phone=$("input[name=phone]").val();
+            const addr1=$("input[name=addr1]").val();
+            const addr2=$("input[name=addr2]").val();
+            set(ref(db, `users/${uid}`), {email, name, phone, addr1, addr2});
+        }
+    });
+
+    $(".search").click(e=>{
+        new daum.Postcode({
+            oncomplete: function(data) {
+                const address=data.buildingName !="" ? `$(data.buildingName)($(data.address))` : 
+                $("input[name=addr1]").val(data.address);
+            }
+        }).open();
+    });
+</script>

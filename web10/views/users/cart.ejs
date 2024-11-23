@@ -1,5 +1,5 @@
-<div>
-    <h1 class="text-center my-5">장바구니</h1>
+<div class="my-5">
+    <h1 class="text-center mb-5"><%=title%></h1>
     <div id="div_list"></div>
     <script type="x-handlebars-template" id="temp_list">
       <table class="table">
@@ -22,8 +22,8 @@
             else return "/images/no_image.png";
         })
     </script>
-  </div>
-  <script type="module">
+</div>
+<script type="module">
     import {app} from '/javascripts/config.js';
     import {getDatabase, onValue, ref, remove} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
     const db = getDatabase(app);
@@ -41,6 +41,8 @@
     //삭제버튼을 클릭한 경우
     $("#div_list").on("click", "button", async function(){
       const isbn=$(this).attr("isbn");
-      await remove(ref(db, `cart/${uid}/${isbn}`));
+      if(confirm(`${isbn}삭제하시겠습니까?`)){
+        await remove(ref(db, `cart/${uid}/${isbn}`));
+      }
     });
   </script>
